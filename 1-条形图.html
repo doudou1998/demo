@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+       
+       <script type="text/javascript">
+       var dom = document.getElementById("container");
+       var myChart = echarts.init(dom,'dark');
+       var app = {};
+       option = null;
+var dataMap = {};
+//处理数据
+function dataFormatter(obj) {
+    //26天--跟时间轴一一对应
+    var pList = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','1999',
+                 '2009','2001','2002','2003','2004','2005','2006','2007','2008','2009',
+                 '2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
+    var temp;
+    for (var year = 2017; year <= 2020; year++) {
+        temp = obj[year];
+        for (var i = 0, l = temp.length; i < l; i++) {
+            obj[year][i] = {
+                name: pList[i],
+                value: temp[i]
+            };
+        }
+    }
+    return obj;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//每日确诊人数
+//中括号里面是每一天每一市的数据，比如：
+//3:[15,7,8,6,0,2,5,0,2,0,1,0,3,0,1,0,3,0,0,0,0],中是横坐标dataX里面各个市对应的值，这是第一天01/23的数据
+// 1 城市 2 
+dataMap.data1 = dataFormatter({
+    2017:[0.14, 0.19, 0, 0],
+    2018:[0.14, 0.18, 0, 0],
+    2019:[0.28, 0.17, 0, 0],
+    2020:[0.16, 0.18, 0, 0],
+});
+
+dataMap.data2 = dataFormatter({
+    2017:[0.65, 0.27, 0, 0],
+    2018:[0.38, 0.26, 0, 0],
+    2019:[0.44, 0.25, 0, 0],
+    2020:[0.59, 0.27, 0, 0],
+});
+
+dataMap.data3 = dataFormatter({
+    2017:[0.11, 0.05, 0, 0],
+    2018:[0.33, 0.04, 0, 0],
+    2019:[0.19, 0.04, 0, 0 ],
+    2020:[0.18, 0.04, 0, 0],
+});
+
+
+dataMap.data4 = dataFormatter({
+    2017:[0.10, 0.49, 0, 0],
+    2018:[0.15, 0.52, 0, 0],
+    2019:[0.09, 0.54, 0, 0],
+    2020:[0.07, 0.51, 0, 0],
+});
+
+ 
+//21个地级市----X轴坐标
+dataX = ['城市分布','医院等级','法律诉讼','注册资本'];
+ 
+option = {
+    baseOption: {
+        timeline: {
+            axisType: 'category',
+            // realtime: false,
+            // loop: false,
+            autoPlay: true,
+            // currentIndex: 2,
+            playInterval: 500,
+            label:{
+                interval: 1,
+                fontSize: 10
+            },
+            // data是时间轴的数据
+            data: [
+                '2017','2018','2019','2020'
+            ]
+        },
+        title: {
+            text: '莆田系医院分布变化',
+            top:20,
+            left: 'center',
+            textStyle:{
+                fontSize: 30
+            }
+        },
+        calculable : true,
+        grid: {
+            top: 80,
+            bottom: 100,
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true,
+                        formatter: function (params) {
+                            return params.value.replace('\n', '');
+                        }
+                    }
+                }
+            }
+        },
+        yAxis: [
+            {
+                'type':'category',
+                'axisLabel':{'interval':0},
+                'data': dataX,
+                splitLine: {show: false}
+            }
+        ],
+        xAxis: [
+            {
+                type: 'value',
+                name: '占比'
+            }
+        ],
+        series: [
+            {
+                name: '类别1',
+                type: 'bar',
+                stack: '广告',
+                barMinHeight: 2,
+                label : {
+                    show: true,        //显示数值
+                    fontSize: 14
+                },
+            },
+            {
+                name: '类别2',
+                type: 'bar',
+                stack: '广告',
+                barMinHeight: 2,
+                label : {
+                    show: true,        //显示数值
+                    fontSize: 14
+                },
+            },
+            {
+                name: '类别3',
+                type: 'bar',
+                stack: '广告',
+                barMinHeight: 2,
+                label : {
+                    show: true,        //显示数值
+                    fontSize: 14
+                },
+
+            },                        
+            {
+                name: '类别4',
+                type: 'bar',
+                stack: '广告',
+                barMinHeight: 2,
+                label : {
+                    show: true,        //显示数值
+                    fontSize: 14
+                },
+            }
+        ]
+    },
+    options: [
+        {
+            series: [
+                {data: dataMap.data1['2017']},
+                {data: dataMap.data2['2017']},
+                {data: dataMap.data3['2017']},
+                {data: dataMap.data4['2017']},
+            ]
+        },
+        {
+            series : [
+                {data: dataMap.data1['2018']},
+                {data: dataMap.data2['2018']},
+                {data: dataMap.data3['2018']},
+                {data: dataMap.data4['2018']},
+            ]
+        },
+        {
+            series : [
+                {data: dataMap.data1['2019']},
+                {data: dataMap.data2['2019']},
+                {data: dataMap.data3['2019']},
+                {data: dataMap.data4['2019']},
+            ]
+        },
+        {
+            series : [
+                {data: dataMap.data1['2020']},
+                {data: dataMap.data2['2020']},
+                {data: dataMap.data3['2020']},
+                {data: dataMap.data4['2020']},
+            ]
+        },
+        
+    ]
+};;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+   </body>
+</html>
